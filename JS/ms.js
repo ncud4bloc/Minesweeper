@@ -15,10 +15,11 @@ var $minesAr = [];
 var $foundMinesAr = [];
 var $clearBoxAr = [];
 var $zocAr = [];
+var $allNumAr = [];
+var mAdjCount = 0;
 
 $content.append($start);
 $content.append($gameBoard);
-   /* $gameBoard.append($box11);*/
    
 
 /* -----  CSS  ----- */
@@ -93,7 +94,6 @@ var makeGrid = function(){
             $aCell.attr('id',boxEntry);
         }
     }
-    /*console.log($unclickedBoxesAr);*/
 };
 
 var makeMines =function(){
@@ -108,7 +108,8 @@ var makeMines =function(){
         mineEntry = 'b'+ locI +'b'+ locJ;
         $minesAr.push(mineEntry);
     }
-    console.log($minesAr);
+    $minesAr.sort();
+    console.log('Mine locations ' + $minesAr);
     $('.bomb').css({
         'height': '33px',
         'width': '33px',
@@ -126,30 +127,194 @@ var zocCalc =function(selectedBox){
     $center.shift();
     var firstCord = parseInt($center[0]);
     var lastCord = parseInt($center[1]);
-    /*console.log('Center box I & J: ' + $center);
-    console.log('First coordinate = ' + firstCord);
-    console.log('Last coordinate = ' + lastCord);*/
     
     $zocAr = [];
     var adj1 = 'b'+ (firstCord - 1) +'b'+ (lastCord - 1);
-    $zocAr.push(adj1);
+        if (((firstCord - 1) > -1) && ((lastCord - 1) > -1)){
+            $zocAr.push(adj1);
+            $allNumAr.push(adj1);
+        } else {
+            console.log('Out of Range');
+        }
     var adj2 = 'b'+ (firstCord - 1) +'b'+ (lastCord);
-    $zocAr.push(adj2);
+        if (((firstCord - 1) > -1)){
+            $zocAr.push(adj2);
+            $allNumAr.push(adj2);
+        } else {
+            console.log('Out of Range');
+        }
     var adj3 = 'b'+ (firstCord - 1) +'b'+ (lastCord + 1);
-    $zocAr.push(adj3);
+        if (((firstCord - 1) > -1) && ((lastCord + 1) < 9)){
+            $zocAr.push(adj3);
+            $allNumAr.push(adj3);
+        } else {
+            console.log('Out of Range');
+        }
     var adj4 = 'b'+ (firstCord) +'b'+ (lastCord - 1);
-    $zocAr.push(adj4);
+        if (((lastCord - 1) > -1)){
+            $zocAr.push(adj4);
+            $allNumAr.push(adj4);
+        } else {
+            console.log('Out of Range');
+        }
     var adj5 = 'b'+ (firstCord) +'b'+ (lastCord + 1);
-    $zocAr.push(adj5);
+        if (((lastCord + 1) < 9)){
+            $zocAr.push(adj5);
+            $allNumAr.push(adj5);
+        } else {
+            console.log('Out of Range');
+        }
     var adj6 = 'b'+ (firstCord + 1) +'b'+ (lastCord - 1);
-    $zocAr.push(adj6);
+        if (((firstCord + 1) < 9) && ((lastCord - 1) > -1)){
+            $zocAr.push(adj6);
+            $allNumAr.push(adj6);
+        } else {
+            console.log('Out of Range');
+        }
     var adj7 = 'b'+ (firstCord + 1) +'b'+ (lastCord);
-    $zocAr.push(adj7);
+        if (((firstCord + 1) < 9)){
+            $zocAr.push(adj7);
+            $allNumAr.push(adj7);
+        } else {
+            console.log('Out of Range');
+        }
     var adj8 = 'b'+ (firstCord + 1) +'b'+ (lastCord + 1);
-    $zocAr.push(adj8);
+        if (((firstCord + 1) < 9) && ((lastCord + 1) < 9)){
+            $zocAr.push(adj8);
+            $allNumAr.push(adj8);
+            $allNumAr.sort();
+        } else {
+            console.log('Out of Range');
+        }
     
-    console.log('Center box: ' + $boxID);
-    console.log('Neighbor IDs: ' + $zocAr);
+    var len = $minesAr.length;
+    for (var i = 0; i < len; i++){
+        var bomb = $minesAr[i];
+        if ($allNumAr.indexOf(bomb) != -1){
+            var cut = $allNumAr.indexOf(bomb);
+            $allNumAr.splice(cut,1);
+        }
+    }
+    console.log('Adjacent Boxes are: ' + $allNumAr);
+};
+
+var adjNums = function(bombArray){
+    bombArray.forEach(function(item,index){
+        zocCalc(item);
+    });
+    
+    for (var i = 0; i < $allNumAr.length; i++){
+        var count = 0;
+        
+        var nNum = $allNumAr[i];
+        var nNumX = "#"+nNum;
+        var $numberBox = $(nNumX);
+        $numberBox.addClass('nFour');
+        $numberBox.text('4');
+        
+        for (var j = 0; j < $allNumAr.length; j++){
+            if ($allNumAr[i] == $allNumAr[j]){
+                count++;
+            }
+        }
+        console.log('The count for ' + $allNumAr[i] + ' is ' + count);
+    }
+    
+    $('.nOne').css({
+        'font-size': '16px',
+        'font-weight': '900',
+        'text-align': 'center',
+        'color': '#050569',
+        'height': '33px',
+        'width': '33px',
+        'background-color': '#7b7b81',
+        'border': '3px groove #898a8b'
+    });
+    $('.nOne').text("1");
+    
+    $('.nTwo').css({
+        'font-size': '16px',
+        'font-weight': '900',
+        'text-align': 'center',
+        'color': '#18d835',
+        'height': '33px',
+        'width': '33px',
+        'background-color': '#7b7b81',
+        'border': '3px groove #898a8b'
+    });
+    $('.nTwo').text("2");
+    
+    $('.nThree').css({
+        'font-size': '16px',
+        'font-weight': '900',
+        'text-align': 'center',
+        'color': '#d41c1c',
+        'height': '33px',
+        'width': '33px',
+        'background-color': '#7b7b81',
+        'border': '3px groove #898a8b'
+    });
+    $('.nThree').text("3");
+    
+    $('.nFour').css({
+        'font-size': '16px',
+        'font-weight': '900',
+        'text-align': 'center',
+        'color': '#80107b',
+        'height': '33px',
+        'width': '33px',
+        'background-color': '#7b7b81',
+        'border': '3px groove #898a8b'
+    });
+    $('.nFour').text("4");
+    
+    $('.nFive').css({
+        'font-size': '16px',
+        'font-weight': '900',
+        'text-align': 'center',
+        'color': '#f2f215',
+        'height': '33px',
+        'width': '33px',
+        'background-color': '#7b7b81',
+        'border': '3px groove #898a8b'
+    });
+    $('.nFive').text("5");
+    
+    $('.nSix').css({
+        'font-size': '16px',
+        'font-weight': '900',
+        'text-align': 'center',
+        'color': '#000',
+        'height': '33px',
+        'width': '33px',
+        'background-color': '#7b7b81',
+        'border': '3px groove #898a8b'
+    });
+    $('.nSix').text("6");
+    
+    $('.nSeven').css({
+        'font-size': '16px',
+        'font-weight': '900',
+        'text-align': 'center',
+        'color': '#fff',
+        'height': '33px',
+        'width': '33px',
+        'background-color': '#7b7b81',
+        'border': '3px groove #898a8b'
+    });
+    $('.nSeven').text("7");
+    
+    $('.nEight').css({
+        'font-size': '16px',
+        'font-weight': '900',
+        'text-align': 'center',
+        'color': '#ba9f46',
+        'height': '33px',
+        'width': '33px',
+        'background-color': '#7b7b81',
+        'border': '3px groove #898a8b'
+    });
+    $('.nEight').text("8");
     
 };
 
@@ -161,16 +326,13 @@ $(function(){
     $start.on('click',function(){
         makeGrid();
         makeMines();
+        adjNums($minesAr);
         
         $('.box').on('click',function(e){
             $boxID = $(this).attr('id');
             $clickedBoxesAr.push($boxID);
             var delIndex = $unclickedBoxesAr.indexOf($boxID);
             $unclickedBoxesAr.splice(delIndex,1);
-            /*console.log('This Box ID is: ' + $boxID);
-            console.log($clickedBoxesAr);
-            console.log($unclickedBoxesAr);*/
-            
             zocCalc($boxID);
         });
         
@@ -178,57 +340,4 @@ $(function(){
         
     });
     
-    /*$start.on('click',function(){
-        $('.box').on('click');
-        $('.box').css({
-                'background-image': 'none',
-                'background-color': '#7b7b81'
-            });
-        initPlayers();
-        var $gamer1 = new Player($p1,"X","yes",[],"no",0);
-        var $gamer2 = new Player($p2,"O","no",[],"no",0);
-        sMessage = $gamer1.name + "\'s Turn";
-        $whosTurn.text(sMessage);
-        $name1.text($p1);
-        $name2.text($p2);
-        $win1.text('Wins: ' + nWins1);
-        $win2.text('Wins: ' + nWins2);
-        
-        var putDown = function(clickedBox,boxNum){
-            count ++;
-            clickedBox.css({
-                'background-repeat': 'no-repeat',
-                'background-position': 'center',
-                'background-size': 'cover'
-            });
-            if(count % 2 !== 0){
-                clickedBox.css({
-                    'background-image': 'url(../IMAGES/x2.png)'
-                });
-                $gamer1.squares.push(boxNum);
-                if($gamer1.victory !== 'yes'){
-                    sMessage = $gamer2.name + "\'s Turn";
-                    $whosTurn.text(sMessage);
-                }
-                victory($gamer1,count);
-            } else {
-                clickedBox.css({
-                    'background-image': 'url(../IMAGES/o2.png)'
-                });
-                $gamer2.squares.push(boxNum);
-                if($gamer2.victory !== 'yes'){
-                    sMessage = $gamer1.name + "\'s Turn";
-                    $whosTurn.text(sMessage);
-                }
-                victory($gamer2,count);
-            }
-        };
-        
-        var victory = function(gamer,countNum){    
-        };
-    
-        
-    
-       
-    }); */
 });
