@@ -16,7 +16,7 @@ var $foundMinesAr = [];
 var $clearBoxAr = [];
 var $zocAr = [];
 var $allNumAr = [];
-var mAdjCount = 0;
+/*var mAdjCount = 0;*/
 
 $content.append($start);
 $content.append($gameBoard);
@@ -57,7 +57,6 @@ $gameBoard.css({
 });
 
 $('.defBG').css({
-/*$('.box').css({*/
     'height': '27px',
     'width': '27px',
     'background-color': '#7b7b81',
@@ -107,16 +106,7 @@ var makeMines =function(){
     }
     $minesAr.sort();
     console.log('Mine locations ' + $minesAr);
-    $('.bomb').css({
-        'height': '33px',
-        'width': '33px',
-        'background-color': '#f00',
-        'background-image': 'url(../IMAGES/mine.jpg)',
-        'background-repeat': 'no-repeat',
-        'background-position': 'center',
-        'background-size': 'cover',
-        'border': '1px groove #7b7b81'
-    });
+   
 };
 
 var zocCalc =function(selectedBox){
@@ -192,7 +182,7 @@ var zocCalc =function(selectedBox){
             $allNumAr.splice(cut,1);
         }
     }
-    /*console.log('Adjacent Boxes are: ' + $allNumAr);*/
+   
 };
 
 var adjNums = function(bombArray){
@@ -212,135 +202,54 @@ var adjNums = function(bombArray){
             
             switch(count) {
 			 case 1:
+                $numberBox.removeClass('defBG');
 				$numberBox.addClass('nOne');
+                $numberBox.addClass('numbered');
 				break;
 			 case 2:
                 $numberBox.removeClass('nOne');
+                $numberBox.removeClass('defBG');
 				$numberBox.addClass('nTwo');
+                $numberBox.addClass('numbered');
 				break;
 			 case 3:
                 $numberBox.removeClass('nTwo');
+                $numberBox.removeClass('defBG');
 				$numberBox.addClass('nThree');
+                $numberBox.addClass('numbered');
 				break;
              case 4:
                 $numberBox.removeClass('nThree');
+                $numberBox.removeClass('defBG');
 				$numberBox.addClass('nFour');
+                $numberBox.addClass('numbered');
 				break;
              case 5:
                 $numberBox.removeClass('nFour');
+                $numberBox.removeClass('defBG');
 				$numberBox.addClass('nFive');
+                $numberBox.addClass('numbered');
 				break;
              case 6:
                 $numberBox.removeClass('nFive');
+                $numberBox.removeClass('defBG');
 				$numberBox.addClass('nSix');
+                $numberBox.addClass('numbered');
 				break;
              case 7:
                 $numberBox.removeClass('nSix');
+                $numberBox.removeClass('defBG');
 				$numberBox.addClass('nSeven');
+                $numberBox.addClass('numbered');
 				break;
 			 case 8:
                 $numberBox.removeClass('nSeven');
+                $numberBox.removeClass('defBG');
 				$numberBox.addClass('nEight');
+                $numberBox.addClass('numbered');
 		    }    
         }
-        /*console.log('The count for ' + $allNumAr[i] + ' is ' + count);*/
     }
-    
-    $('.nOne').css({
-        'font-size': '16px',
-        'font-weight': '900',
-        'text-align': 'center',
-        'color': '#050569',
-        'height': '33px',
-        'width': '33px',
-        'background-color': '#7b7b81',
-        'border': '3px groove #898a8b'
-    });
-    $('.nOne').text("1");
-    
-    $('.nTwo').css({
-        'font-size': '16px',
-        'font-weight': '900',
-        'text-align': 'center',
-        'color': '#18d835',
-        'height': '33px',
-        'width': '33px',
-        'background-color': '#7b7b81',
-        'border': '3px groove #898a8b'
-    });
-    $('.nTwo').text("2");
-    
-    $('.nThree').css({
-        'font-size': '16px',
-        'font-weight': '900',
-        'text-align': 'center',
-        'color': '#d41c1c',
-        'height': '33px',
-        'width': '33px',
-        'background-color': '#7b7b81',
-        'border': '3px groove #898a8b'
-    });
-    $('.nThree').text("3");
-    
-    $('.nFour').css({
-        'font-size': '16px',
-        'font-weight': '900',
-        'text-align': 'center',
-        'color': '#80107b',
-        'height': '33px',
-        'width': '33px',
-        'background-color': '#7b7b81',
-        'border': '3px groove #898a8b'
-    });
-    $('.nFour').text("4");
-    
-    $('.nFive').css({
-        'font-size': '16px',
-        'font-weight': '900',
-        'text-align': 'center',
-        'color': '#f2f215',
-        'height': '33px',
-        'width': '33px',
-        'background-color': '#7b7b81',
-        'border': '3px groove #898a8b'
-    });
-    $('.nFive').text("5");
-    
-    $('.nSix').css({
-        'font-size': '16px',
-        'font-weight': '900',
-        'text-align': 'center',
-        'color': '#000',
-        'height': '33px',
-        'width': '33px',
-        'background-color': '#7b7b81',
-        'border': '3px groove #898a8b'
-    });
-    $('.nSix').text("6");
-    
-    $('.nSeven').css({
-        'font-size': '16px',
-        'font-weight': '900',
-        'text-align': 'center',
-        'color': '#fff',
-        'height': '33px',
-        'width': '33px',
-        'background-color': '#7b7b81',
-        'border': '3px groove #898a8b'
-    });
-    $('.nSeven').text("7");
-    
-    $('.nEight').css({
-        'font-size': '16px',
-        'font-weight': '900',
-        'text-align': 'center',
-        'color': '#ba9f46',
-        'height': '33px',
-        'width': '33px',
-        'background-color': '#7b7b81',
-        'border': '3px groove #898a8b'
-    });
-    $('.nEight').text("8");
     
 };
 
@@ -358,7 +267,128 @@ $(function(){
             $clickedBoxesAr.push($boxID);
             var delIndex = $unclickedBoxesAr.indexOf($boxID);
             $unclickedBoxesAr.splice(delIndex,1);
-            /*zocCalc($boxID);*/
+            
+            if ($(this).is('.defBG')){
+                $(this).removeClass('defBG').addClass('nZero');
+            }
+            
+            if ($(this).is('.bomb')){
+                $(this).addClass('visBomb');
+            }
+            
+            if ($(this).is('.nOne')){
+                $(this).addClass('visNumbered');
+                $(this).addClass('visOne');
+            }
+            
+            if ($(this).is('.nTwo')){
+                $(this).addClass('visNumbered');
+                $(this).addClass('visTwo');
+            }
+            
+            if ($(this).is('.nThree')){
+                $(this).addClass('visNumbered');
+                $(this).addClass('visThree');
+            }
+            
+            if ($(this).is('.nFour')){
+                $(this).addClass('visNumbered');
+                $(this).addClass('visFour');
+            }
+            
+            if ($(this).is('.nFive')){
+                $(this).addClass('visNumbered');
+                $(this).addClass('visFive');
+            }
+            
+            if ($(this).is('.nSix')){
+                $(this).addClass('visNumbered');
+                $(this).addClass('visSix');
+            }
+            
+            if ($(this).is('.nSeven')){
+                $(this).addClass('visNumbered');
+                $(this).addClass('visSeven');
+            }
+            
+            if ($(this).is('.nEight')){
+                $(this).addClass('visNumbered');
+                $(this).addClass('visEight');
+            }
+            
+            $('.visBomb').css({
+            'height': '33px',
+            'width': '33px',
+            'background-color': '#f00',
+            'background-image': 'url(../IMAGES/mine.jpg)',
+            'background-repeat': 'no-repeat',
+            'background-position': 'center',
+            'background-size': 'cover',
+            'border': '1px groove #7b7b81'
+            });
+            
+            $('.nZero').css({
+            'font-size': '16px',
+            'font-weight': '900',
+            'text-align': 'center',
+            'color': '#d6d6e0',
+            'height': '33px',
+            'width': '33px',
+            'background-color': '#7b7b81',
+            'border': '3px groove #898a8b'
+            });
+            $('.nZero').text("0");
+            
+            $('.visNumbered').css({
+            'font-size': '16px',
+            'font-weight': '900',
+            'text-align': 'center',
+            'height': '33px',
+            'width': '33px',
+            'background-color': '#7b7b81',
+            'border': '3px groove #898a8b'
+            });
+    
+            $('.visOne').css({
+                'color': '#050569'
+            });
+            $('.visOne').text("1");
+    
+            $('.visTwo').css({
+                'color': '#18d835'
+            });
+            $('.visTwo').text("2");
+    
+            $('.visThree').css({
+                'color': '#d41c1c'
+            });
+            $('.visThree').text("3");
+    
+            $('.visFour').css({
+                'color': '#80107b'
+            });
+            $('.visFour').text("4");
+    
+            $('.visFive').css({
+                'color': '#f2f215'
+            });
+            $('.visFive').text("5");
+    
+            $('.visSix').css({
+                'color': '#000'
+            });
+            $('.visSix').text("6");
+    
+            $('.visSeven').css({
+                'color': '#fff'
+            });
+            $('.visSeven').text("7");
+    
+            $('.visEight').css({
+                'color': '#ba9f46'
+            });
+            $('.visEight').text("8");  
+            
         });
           
     });
