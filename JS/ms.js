@@ -1,9 +1,8 @@
 var $content = $('#content');
 var $start = $('<div class="topbar" id="gStart">Click here to play Minesweeper</div>');
 var $gameBoard = $('<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" id="gameBoard"></div>');
-var $box11 = $('<div class="box col-xs-4 col-sm-4 col-md-4 col-lg-4" id="b11"></div>');
 var $gameRow = $('<div class="gameRow"></div>');
-var $cell = $('<div class="box defBG"></div>')
+var $cell = $('<div class="box defBG notClicked"></div>')
 var $aRow;
 var $aCell;
 var boxEntry;
@@ -16,7 +15,6 @@ var $foundMinesAr = [];
 var $clearBoxAr = [];
 var $zocAr = [];
 var $allNumAr = [];
-/*var mAdjCount = 0;*/
 
 $content.append($start);
 $content.append($gameBoard);
@@ -253,11 +251,27 @@ var adjNums = function(bombArray){
     
 };
 
+var reset = function(){
+    /*$content.reset();*/
+    $('.box').remove();
+    $('.gameRow').remove();
+    $('.gameBoard').remove();
+    $unclickedBoxesAr = [];
+    $clickedBoxesAr = [];
+    $minesAr = [];
+    $foundMinesAr = [];
+    $clearBoxAr = [];
+    $zocAr = [];
+    $allNumAr = [];
+    count = 0;
+};
+
 /* -----  Function Calls  ----- */
 
 $(function(){
     
     $start.on('click',function(){
+        reset();
         makeGrid();
         makeMines();
         adjNums($minesAr);
@@ -268,12 +282,24 @@ $(function(){
             var delIndex = $unclickedBoxesAr.indexOf($boxID);
             $unclickedBoxesAr.splice(delIndex,1);
             
+            $(this).removeClass('notClicked').addClass('clicked');
+            
             if ($(this).is('.defBG')){
                 $(this).removeClass('defBG').addClass('nZero');
             }
             
             if ($(this).is('.bomb')){
-                $(this).addClass('visBomb');
+                $('.bomb').addClass('visBomb');
+                adjNums($minesAr);
+                $('.box').off('click');
+            }
+            
+            var ucLen = $unclickedBoxesAr.length;
+            if (ucLen == 9){
+                $('.bomb').addClass('visFlag');
+                $('.notClicked').addClass('visFlag');
+                adjNums($minesAr);
+                $('.box').off('click');
             }
             
             if ($(this).is('.nOne')){
@@ -321,6 +347,17 @@ $(function(){
             'width': '33px',
             'background-color': '#f00',
             'background-image': 'url(../IMAGES/mine.jpg)',
+            'background-repeat': 'no-repeat',
+            'background-position': 'center',
+            'background-size': 'cover',
+            'border': '1px groove #7b7b81'
+            });
+            
+            $('.visFlag').css({
+            'height': '33px',
+            'width': '33px',
+            'background-color': '#f00',
+            'background-image': 'url(../IMAGES/flag.jpg)',
             'background-repeat': 'no-repeat',
             'background-position': 'center',
             'background-size': 'cover',
@@ -387,7 +424,7 @@ $(function(){
             $('.visEight').css({
                 'color': '#ba9f46'
             });
-            $('.visEight').text("8");  
+            $('.visEight').text("8"); 
             
         });
           
