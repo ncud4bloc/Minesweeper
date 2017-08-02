@@ -21,7 +21,6 @@ var mAdjCount = 0;
 $content.append($start);
 $content.append($gameBoard);
    
-
 /* -----  CSS  ----- */
 
 $content.css({
@@ -64,8 +63,6 @@ $('.defBG').css({
     'background-color': '#7b7b81',
     'border': '3px outset #898a8b'
 });
-
-
 
 /* -----  Functions  ----- */
 
@@ -195,7 +192,7 @@ var zocCalc =function(selectedBox){
             $allNumAr.splice(cut,1);
         }
     }
-    console.log('Adjacent Boxes are: ' + $allNumAr);
+    /*console.log('Adjacent Boxes are: ' + $allNumAr);*/
 };
 
 var adjNums = function(bombArray){
@@ -205,19 +202,48 @@ var adjNums = function(bombArray){
     
     for (var i = 0; i < $allNumAr.length; i++){
         var count = 0;
-        
-        var nNum = $allNumAr[i];
-        var nNumX = "#"+nNum;
-        var $numberBox = $(nNumX);
-        $numberBox.addClass('nFour');
-        $numberBox.text('4');
-        
         for (var j = 0; j < $allNumAr.length; j++){
             if ($allNumAr[i] == $allNumAr[j]){
                 count++;
             }
+            var nNum = $allNumAr[i];
+            var nNumX = "#"+nNum;
+            var $numberBox = $(nNumX);
+            
+            switch(count) {
+			 case 1:
+				$numberBox.addClass('nOne');
+				break;
+			 case 2:
+                $numberBox.removeClass('nOne');
+				$numberBox.addClass('nTwo');
+				break;
+			 case 3:
+                $numberBox.removeClass('nTwo');
+				$numberBox.addClass('nThree');
+				break;
+             case 4:
+                $numberBox.removeClass('nThree');
+				$numberBox.addClass('nFour');
+				break;
+             case 5:
+                $numberBox.removeClass('nFour');
+				$numberBox.addClass('nFive');
+				break;
+             case 6:
+                $numberBox.removeClass('nFive');
+				$numberBox.addClass('nSix');
+				break;
+             case 7:
+                $numberBox.removeClass('nSix');
+				$numberBox.addClass('nSeven');
+				break;
+			 case 8:
+                $numberBox.removeClass('nSeven');
+				$numberBox.addClass('nEight');
+		    }    
         }
-        console.log('The count for ' + $allNumAr[i] + ' is ' + count);
+        /*console.log('The count for ' + $allNumAr[i] + ' is ' + count);*/
     }
     
     $('.nOne').css({
@@ -318,7 +344,6 @@ var adjNums = function(bombArray){
     
 };
 
-
 /* -----  Function Calls  ----- */
 
 $(function(){
@@ -333,11 +358,9 @@ $(function(){
             $clickedBoxesAr.push($boxID);
             var delIndex = $unclickedBoxesAr.indexOf($boxID);
             $unclickedBoxesAr.splice(delIndex,1);
-            zocCalc($boxID);
+            /*zocCalc($boxID);*/
         });
-        
-        
-        
+          
     });
     
 });
