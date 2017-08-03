@@ -272,9 +272,6 @@ var ckWinLose = function(gStatus){
     if (ucLen == 9){
         $('.bomb').addClass('visFlag');
         $('.notClicked').addClass('visFlag');
-        var $last = $('.bomb').is('.visFlag');
-        var $lastAr = [$last];
-        adjNums($lastAr);
         $('.visFlag').removeClass('nZero');
         $('.box').off('click');
     }
@@ -311,6 +308,7 @@ var boxGraphics = function(){
         'height': '33px',
         'width': '33px',
         'background-color': '#7b7b81',
+        /*'background-color': '#9898a7',*/
         'border': '3px groove #898a8b'
     });
     $('.nZero').text("0");
