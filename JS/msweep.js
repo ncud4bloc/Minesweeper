@@ -1,5 +1,5 @@
 var $content = $('#content');
-var $start = $('<div class="topbar" id="gStart">Click here to play Minesweeper</div>');
+var $start = $('<div class="topbar" id="gStart">Click for New Minesweeper Game and Board Setup</div>');
 var $gameBoard = $('<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" id="gameBoard"></div>');
 var $gameRow = $('<div class="gameRow"></div>');
 var $cell = $('<div class="box defBG notClicked"></div>')
@@ -21,25 +21,28 @@ $content.append($gameBoard);
 
 $('body').css({
     'width': '100%',
-    'background-color': '#4d7ba8'
-})
+    'background-color': '#0e1f83'
+});
 
 $content.css({
     'width': '400px',
-    'height': '430px',
+    'height': '455px',
     'border': '15px ridge #898a8b',
-    'margin-top': '25px',
+    'margin': '45px auto',
     'background-color': '#b5b6b7'
 });
 
 $start.css({
-    'height': '35px',
+    'height': '70px',
     'width': '307px',
     'text-align': 'center',
     'color': '#62dee3',
     'margin': '10px auto',
     'background-color': '#7b7b81',
     'border': '5px outset #898a8b',
+    'padding-top': '5px',
+    'padding-left': '25px',
+    'padding-right': '25px',
     'font-family': '"Courgette",cursive',
     'font-size': '20px',
     'font-weight': '900'
@@ -99,7 +102,7 @@ var makeMines =function(){
         var locI = Math.floor(Math.random() * 9);
         var locJ = Math.floor(Math.random() * 9);
         if($('.gameRow').eq(locI).find('.box').eq(locJ).hasClass('bomb')){
-            return;
+            k--;
         } else {
             $('.gameRow').eq(locI).find('.box').eq(locJ).removeClass('defBG').addClass('bomb');
         }
@@ -107,8 +110,14 @@ var makeMines =function(){
         $minesAr.push(mineEntry);
     }
     $minesAr.sort();
+    
+    var $noDupAr = $minesAr.filter(function(item, pos){
+        return $minesAr.indexOf(item) == pos;
+    });
+    $minesAr = $noDupAr;
+
     var $flagAr = $minesAr;
-    console.log('Mine locations ' + $minesAr);
+    console.log('Mine locations: ' + $minesAr);
    
 };
 
@@ -123,59 +132,43 @@ var zocCalc =function(selectedBox){
         if (((firstCord - 1) > -1) && ((lastCord - 1) > -1)){
             $zocAr.push(adj1);
             $allNumAr.push(adj1);
-        } else {
-            console.log('Out of Range');
-        }
+        } 
     var adj2 = 'b'+ (firstCord - 1) +'b'+ (lastCord);
         if (((firstCord - 1) > -1)){
             $zocAr.push(adj2);
             $allNumAr.push(adj2);
-        } else {
-            console.log('Out of Range');
-        }
+        } 
     var adj3 = 'b'+ (firstCord - 1) +'b'+ (lastCord + 1);
         if (((firstCord - 1) > -1) && ((lastCord + 1) < 9)){
             $zocAr.push(adj3);
             $allNumAr.push(adj3);
-        } else {
-            console.log('Out of Range');
-        }
+        } 
     var adj4 = 'b'+ (firstCord) +'b'+ (lastCord - 1);
         if (((lastCord - 1) > -1)){
             $zocAr.push(adj4);
             $allNumAr.push(adj4);
-        } else {
-            console.log('Out of Range');
-        }
+        } 
     var adj5 = 'b'+ (firstCord) +'b'+ (lastCord + 1);
         if (((lastCord + 1) < 9)){
             $zocAr.push(adj5);
             $allNumAr.push(adj5);
-        } else {
-            console.log('Out of Range');
-        }
+        } 
     var adj6 = 'b'+ (firstCord + 1) +'b'+ (lastCord - 1);
         if (((firstCord + 1) < 9) && ((lastCord - 1) > -1)){
             $zocAr.push(adj6);
             $allNumAr.push(adj6);
-        } else {
-            console.log('Out of Range');
-        }
+        } 
     var adj7 = 'b'+ (firstCord + 1) +'b'+ (lastCord);
         if (((firstCord + 1) < 9)){
             $zocAr.push(adj7);
             $allNumAr.push(adj7);
-        } else {
-            console.log('Out of Range');
-        }
+        } 
     var adj8 = 'b'+ (firstCord + 1) +'b'+ (lastCord + 1);
         if (((firstCord + 1) < 9) && ((lastCord + 1) < 9)){
             $zocAr.push(adj8);
             $allNumAr.push(adj8);
             $allNumAr.sort();
-        } else {
-            console.log('Out of Range');
-        }
+        } 
     
     var len = $minesAr.length;
     for (var i = 0; i < len; i++){
@@ -192,7 +185,6 @@ var adjNums = function(bombArray){
     bombArray.forEach(function(item,index){
         zocCalc(item);
     });
-    
     for (var i = 0; i < $allNumAr.length; i++){
         var count = 0;
         for (var j = 0; j < $allNumAr.length; j++){
@@ -270,14 +262,13 @@ var recordClick = function(activeBox){
 
 var ckWinLose = function(gStatus){
     if (gStatus.is('.bomb')){
+        var zz = 1;
         $('.bomb').addClass('visBomb');
-        adjNums($minesAr);
         $('.box').off('click');
     }
             
     var ucLen = $unclickedBoxesAr.length;
-    if (ucLen == 9){
-        adjNums($minesAr);
+    if ((ucLen == 9) && zz != 1){
         $('.bomb').addClass('visFlag');
         $('.notClicked').addClass('visFlag');
         $('.visFlag').removeClass('nZero');
@@ -295,8 +286,7 @@ var boxGraphics = function(){
         'background-position': 'center',
         'background-size': 'cover',
         'border': '1px groove #7b7b81'
-    });
-            
+    });        
     $('.visFlag').css({
         'height': '33px',
         'width': '33px',
@@ -306,8 +296,7 @@ var boxGraphics = function(){
         'background-position': 'center',
         'background-size': 'cover',
         'border': '1px groove #7b7b81'
-    });
-            
+    });        
     $('.nZero').css({
         'font-size': '16px',
         'font-weight': '900',
@@ -374,72 +363,49 @@ var boxGraphics = function(){
 
 var modifyBox = function(bCount){
     if (bCount.is('.nOne')){
-                bCount.addClass('visNumbered');
-                bCount.addClass('visOne');
-            }
-            
-            if (bCount.is('.nTwo')){
-                bCount.addClass('visNumbered');
-                bCount.addClass('visTwo');
-            }
-            
-            if (bCount.is('.nThree')){
-                bCount.addClass('visNumbered');
-                bCount.addClass('visThree');
-            }
-            
-            if (bCount.is('.nFour')){
-                bCount.addClass('visNumbered');
-                bCount.addClass('visFour');
-            }
-            
-            if (bCount.is('.nFive')){
-                bCount.addClass('visNumbered');
-                bCount.addClass('visFive');
-            }
-            
-            if (bCount.is('.nSix')){
-                bCount.addClass('visNumbered');
-                bCount.addClass('visSix');
-            }
-            
-            if (bCount.is('.nSeven')){
-                bCount.addClass('visNumbered');
-                bCount.addClass('visSeven');
-            }
-            
-            if (bCount.is('.nEight')){
-                bCount.addClass('visNumbered');
-                bCount.addClass('visEight');
-            }
-};
-
-var reset = function(){
-    $('.box').remove();
-    $('.gameRow').remove();
-    $('.gameBoard').remove();
-    $unclickedBoxesAr = [];
-    $clickedBoxesAr = [];
-    $minesAr = [];
-    $zocAr = [];
-    $allNumAr = [];
-    count = 0;
-    adj1 = null;
-    adj2 = null;
-    adj3 = null;
-    adj4 = null;
-    adj5 = null;
-    adj6 = null;
-    adj7 = null;
-    adj8 = null;
+        bCount.addClass('visNumbered');
+        bCount.addClass('visOne');
+    }
+    if (bCount.is('.nTwo')){
+        bCount.addClass('visNumbered');
+        bCount.addClass('visTwo');
+    }
+    if (bCount.is('.nThree')){
+        bCount.addClass('visNumbered');
+        bCount.addClass('visThree');
+    }
+    if (bCount.is('.nFour')){
+        bCount.addClass('visNumbered');
+        bCount.addClass('visFour');
+    }
+    if (bCount.is('.nFive')){
+        bCount.addClass('visNumbered');
+        bCount.addClass('visFive');
+    }
+    if (bCount.is('.nSix')){
+        bCount.addClass('visNumbered');
+        bCount.addClass('visSix');
+    }
+    if (bCount.is('.nSeven')){
+        bCount.addClass('visNumbered');
+        bCount.addClass('visSeven');
+    }
+    if (bCount.is('.nEight')){
+        bCount.addClass('visNumbered');
+        bCount.addClass('visEight');
+    }
 };
 
 /* -----  Function Calls  ----- */
 
 $(function(){
     
+    var sClk = 0;
     $start.on('click',function(){
-        reset();
+        if (sClk != 0){
+            location.reload();
+        }
+        sClk++;
         makeGrid();
         makeMines();
         adjNums($minesAr);

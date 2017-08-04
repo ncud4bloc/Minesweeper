@@ -1,5 +1,5 @@
 var $content = $('#content');
-var $start = $('<div class="topbar" id="gStart">Click here to play Minesweeper</div>');
+var $start = $('<div class="topbar" id="gStart">Click for New Minesweeper Game and Board Setup</div>');
 var $gameBoard = $('<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" id="gameBoard"></div>');
 var $gameRow = $('<div class="gameRow"></div>');
 var $cell = $('<div class="box defBG notClicked"></div>')
@@ -8,6 +8,7 @@ var $aCell;
 var boxEntry;
 var $boxID;
 var mineEntry;
+var mineCount = 0;
 var $unclickedBoxesAr = [];
 var $clickedBoxesAr = [];
 var $minesAr = [];
@@ -22,24 +23,27 @@ $content.append($gameBoard);
 $('body').css({
     'width': '100%',
     'background-color': '#4d7ba8'
-})
+});
 
 $content.css({
     'width': '400px',
-    'height': '430px',
+    'height': '455px',
     'border': '15px ridge #898a8b',
-    'margin-top': '25px',
+    'margin': '45px auto',
     'background-color': '#b5b6b7'
 });
 
 $start.css({
-    'height': '35px',
+    'height': '70px',
     'width': '307px',
     'text-align': 'center',
     'color': '#62dee3',
     'margin': '10px auto',
     'background-color': '#7b7b81',
     'border': '5px outset #898a8b',
+    'padding-top': '5px',
+    'padding-left': '25px',
+    'padding-right': '25px',
     'font-family': '"Courgette",cursive',
     'font-size': '20px',
     'font-weight': '900'
@@ -99,16 +103,24 @@ var makeMines =function(){
         var locI = Math.floor(Math.random() * 9);
         var locJ = Math.floor(Math.random() * 9);
         if($('.gameRow').eq(locI).find('.box').eq(locJ).hasClass('bomb')){
-            return;
+            k--;
         } else {
             $('.gameRow').eq(locI).find('.box').eq(locJ).removeClass('defBG').addClass('bomb');
         }
         mineEntry = 'b'+ locI +'b'+ locJ;
         $minesAr.push(mineEntry);
+        mineCount++;
     }
     $minesAr.sort();
+    
+    var $noDupAr = $minesAr.filter(function(item, pos){
+        return $minesAr.indexOf(item) == pos;
+    });
+    $minesAr = $noDupAr;
+
     var $flagAr = $minesAr;
-    console.log('Mine locations ' + $minesAr);
+    console.log('Number of Mines: ' + mineCount);
+    console.log('Mine locations: ' + $minesAr);
    
 };
 
@@ -270,13 +282,14 @@ var recordClick = function(activeBox){
 
 var ckWinLose = function(gStatus){
     if (gStatus.is('.bomb')){
+        var zz = 1;
         $('.bomb').addClass('visBomb');
         adjNums($minesAr);
         $('.box').off('click');
     }
             
     var ucLen = $unclickedBoxesAr.length;
-    if (ucLen == 9){
+    if ((ucLen == 9) && zz != 1){
         adjNums($minesAr);
         $('.bomb').addClass('visFlag');
         $('.notClicked').addClass('visFlag');
@@ -438,8 +451,13 @@ var reset = function(){
 
 $(function(){
     
+    var sClk = 0;
     $start.on('click',function(){
-        reset();
+        if (sClk != 0){
+            location.reload();
+        }
+        sClk++;
+        /*reset();*/
         makeGrid();
         makeMines();
         adjNums($minesAr);
