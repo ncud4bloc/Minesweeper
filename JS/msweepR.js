@@ -9,6 +9,7 @@ var boxEntry;
 var $boxID;
 var mineEntry;
 var $unclickedBoxesAr = [];
+var $zeroBoxesAr = [];
 var $clickedBoxesAr = [];
 var $minesAr = [];
 var $zocAr = [];
@@ -92,6 +93,7 @@ var makeGrid = function(){
             });
             boxEntry = 'b'+ i +'b'+ j;
             $unclickedBoxesAr.push(boxEntry);
+            $zeroBoxesAr.push(boxEntry);
             $aCell.attr('id',boxEntry);
         }
     }
@@ -178,6 +180,14 @@ var zocCalc =function(selectedBox){
             $allNumAr.splice(cut,1);
         }
     }
+    var lenM = $minesAr.length;
+    for (var i = 0; i < lenM; i++){
+        var bombZ = $minesAr[i];
+        if ($zeroBoxesAr.indexOf(bombZ) != -1){
+            var cut = $zeroBoxesAr.indexOf(bombZ);
+            $zeroBoxesAr.splice(cut,1);
+        }
+    }
    
 };
 
@@ -246,6 +256,15 @@ var adjNums = function(bombArray){
         }
     }
     
+    var lenA = $allNumAr.length;
+    for (var i = 0; i < lenA; i++){
+        var bombZ = $allNumAr[i];
+        if ($zeroBoxesAr.indexOf(bombZ) != -1){
+            var cut = $zeroBoxesAr.indexOf(bombZ);
+            $zeroBoxesAr.splice(cut,1);
+        }
+    }
+    
 };
 
 var recordClick = function(activeBox){
@@ -260,6 +279,120 @@ var recordClick = function(activeBox){
     }
 };
 
+var sweepUDLR = function(swpI,swpJ){
+    $('.gameRow').eq(swpI).find('.box').eq(swpJ).removeClass('defBG').addClass('nZero'); 
+};
+
+var sweepZeros = function(zB){
+    
+            var sAr = [];
+            sAr[0] = zB;
+            var contCycling = 'true';
+            /*while (contCycling == 'true'){*/
+                for(var i =0; i < sAr.length; i++){
+                    var $iter = sAr[i];
+                    var $centerZ = $iter.split('b');
+                    $centerZ.shift();
+                    var firstCordU = parseInt($centerZ[0]);
+                    var lastCordU = parseInt($centerZ[1]);
+                    var firstCordD = parseInt($centerZ[0]);
+                    var lastCordD = parseInt($centerZ[1]);
+                    var firstCordL = parseInt($centerZ[0]);
+                    var lastCordL = parseInt($centerZ[1]);
+                    var firstCordR = parseInt($centerZ[0]);
+                    var lastCordR = parseInt($centerZ[1]);
+    
+                    var isZeroU = 'true';
+                    var isZeroD = 'true';
+                    var isZeroL = 'true';
+                    var isZeroR = 'true';
+    
+                    if(((firstCordU - 1) > 0)){
+                        while (isZeroU === 'true'){
+                            var a1 = firstCordU - 1;
+                            var a2 = lastCordU;
+                            if($('.gameRow').eq(a1).find('.box').eq(a2).hasClass('defBG') && (a1 > -1)){
+                                sweepUDLR(a1,a2);
+                                var addU = "b"+a1+"b"+a2;
+                                sAr.push(addU);
+                                var delIndexU = $unclickedBoxesAr.indexOf(addU);
+                                $unclickedBoxesAr.splice(delIndexU,1);
+                                console.log('Up additions: ' + addU);
+                                firstCordU--;    
+                            } else {
+                                isZeroU = 'false';
+                            }
+                        }
+                    }    
+                    if(((firstCordD + 1) < 8)){
+                        while (isZeroD === 'true'){
+                            var a3 = firstCordD + 1;
+                            var a4 = lastCordD;
+                            if($('.gameRow').eq(a3).find('.box').eq(a4).hasClass('defBG') && (a3 < 9)){
+                                sweepUDLR(a3,a4);
+                                var addD = "b"+a3+"b"+a4;
+                                sAr.push(addD);
+                                var delIndexD = $unclickedBoxesAr.indexOf(addD);
+                                $unclickedBoxesAr.splice(delIndexD,1);
+                                console.log('Down additions: ' + addD);
+                                firstCordD++;    
+                            } else {
+                                isZeroD = 'false';
+                            }
+                        }    
+                    }
+                    if(((lastCordL - 1) > 0)){
+                        while (isZeroL === 'true'){
+                            var a5 = firstCordL;
+                            var a6 = lastCordL - 1;
+                            if($('.gameRow').eq(a5).find('.box').eq(a6).hasClass('defBG') && (a6 > -1)){
+                                sweepUDLR(a5,a6);
+                                var addL = "b"+a5+"b"+a6;
+                                sAr.push(addL);
+                                var delIndexL = $unclickedBoxesAr.indexOf(addL);
+                                $unclickedBoxesAr.splice(delIndexL,1);
+                                console.log('Left additions: ' + addL);
+                                lastCordL--;    
+                            } else {
+                                isZeroL = 'false';
+                            }
+                        }    
+                    }
+                    if(((lastCordR + 1) < 8)){
+                        while (isZeroR === 'true'){
+                            var a7 = firstCordR;
+                            var a8 = lastCordR + 1;
+                            if($('.gameRow').eq(a7).find('.box').eq(a8).hasClass('defBG') && (a8 < 9)){
+                                sweepUDLR(a7,a8);
+                                var addR = "b"+a7+"b"+a8;
+                                sAr.push(addR);
+                                var delIndexR = $unclickedBoxesAr.indexOf(addR);
+                                $unclickedBoxesAr.splice(delIndexR,1);
+                                console.log('Right additions: ' + addR);
+                                lastCordR++;    
+                            } else {
+                                isZeroR = 'false';
+                            }
+                        }    
+                    }
+                }     
+                
+            /*contCycling = 'false';
+            } */ 
+    
+};
+
+var showZeros = function(zeroB){
+    $zeroID = zeroB.attr('id');
+    if($zeroBoxesAr.indexOf($zeroID) != -1){
+        console.log('Add showZeros calcs for zeroID ' + $zeroID);
+        sweepZeros($zeroID);     
+    } else {
+        console.log('This is not a zero box');;
+    }
+    
+};
+
 var ckWinLose = function(gStatus){
     if (gStatus.is('.bomb')){
         var zz = 1;
@@ -270,10 +403,10 @@ var ckWinLose = function(gStatus){
     var ucLen = $unclickedBoxesAr.length;
     if ((ucLen == 9) && zz != 1){
         $('.bomb').addClass('visFlag');
-        $('.notClicked').addClass('visFlag');
         $('.visFlag').removeClass('nZero');
         $('.box').off('click');
     }
+    
 };
 
 var boxGraphics = function(){
@@ -412,6 +545,7 @@ $(function(){
         
         $('.box').on('click',function(e){
             recordClick($(this));
+            showZeros($(this));
             modifyBox($(this));
             ckWinLose($(this));
             boxGraphics();
