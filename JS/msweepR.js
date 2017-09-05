@@ -29,7 +29,7 @@ $content.css({
     'width': '400px',
     'height': '455px',
     'border': '15px ridge #898a8b',
-    'margin': '45px auto',
+    'margin': '90px auto',
     'background-color': '#b5b6b7'
 });
 
