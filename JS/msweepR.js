@@ -22,7 +22,8 @@ $content.append($gameBoard);
 
 $('body').css({
     'width': '100%',
-    'background-color': '#0e1f83'
+    /*'background-color': '#0e1f83'*/
+    'background-color': '#fff'
 });
 
 $content.css({
