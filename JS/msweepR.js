@@ -46,7 +46,7 @@ $start.css({
     'padding-left': '25px',
     'padding-right': '25px',
     'font-family': '"Courgette",cursive',
-    'font-size': '20px',
+    'font-size': '14px',
     'font-weight': '900'
 });
 
