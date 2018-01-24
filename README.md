@@ -1,8 +1,3 @@
-# Minesweeper
-Minesweeper game for Odin Project
+Odin Project work: JavaScript/jQuery exercise
 
-I tried to make this close to the classic game in terms of functionality and appearance
-
-Additional updates pending:
-
-Add timer
+Basic minesweeper game using a small 9 x 9 minefield.
